@@ -91,9 +91,12 @@ class BlogController extends AbstractController
     {
         $repository = $doctrine->getRepository(Post::class);
         $posts = $repository->findAll();
+
+        $recentsRepository = $doctrine->getRepository(Post::class);
+        $recents = $recentsRepository->findBy([], ['PublishedAt' => 'DESC'], 2);
         
         return $this->render('blog/blog.html.twig', [
-            'posts' => $posts,
+            'posts' => $posts, 'recents' => $recents,
         ]);
     }
 

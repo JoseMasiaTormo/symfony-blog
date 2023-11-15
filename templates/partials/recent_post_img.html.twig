@@ -1,0 +1,12 @@
+<div class="post">
+    <div class="post-heading">
+        <span>{{ recent.PublishedAt | date('d') }} {{ recent.PublishedAt | date('F') }}</span>
+        <img class="img-responsive" src="{{ asset('images/index/gallery/' ~ recent.Image) }}" alt="post's picture">
+    </div>
+    <div class="post-body">
+        <span>
+        <i class="fa fa-heart sr-icons"></i> {{ recent.NumLikes }}
+        </span>
+        <h4 class="text-left"><a href="{{ path('single_post', {'slug': recent.Slug}) }}"><strong>{{ recent.Title }}</strong></a></h4>
+    </div>
+</div>
