@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
-{% block title%}Post{% endblock %}
-{% block body%}
+{% block title %}Post{% endblock %}
+{% block body %}
 <!-- Principal Content Start -->
    <div id="single">
      <div class="container">
@@ -10,21 +10,21 @@
     <!-- Full Article -->
       <div class="row">
       <div class="post-heading">
-        <img class="img-responsive" src="{{ asset('images/blog/' ~ post.image) }}" alt="{{post.title}}">
+        <img class="img-responsive" src="{{ asset('images/index/gallery/' ~ post.Image) }}" alt="{{ post.Title }}">
       </div>
-      <h2>{{post.title}}</h2>
+      <h2>{{ post.title }}</h2>
       <hr class="subtitle">
       <div class=" block1">
       <div class="col-xs-12 col-sm-9">
        <p>
-       {{post.content}}
+       {{ post.content }}
        </p>
-        <h4>- By {{ post.user.name}}</h4>
+        <h4>- By {{ post.User.name }}</h4>
         <hr>
         <ul class="list-inline">
-          <li>{{ post.publishedAt | date('d') }} {{ post.publishedAt | date('F') }}</li>
+          <li>{{ post.PublishedAt | date('d') }} {{ post.PublishedAt | date('F') }}</li>
           <li><a class="page-scroll" href="#form">COMMENT</a> |</li>
-          <li><a href="{{ path('post_like', {slug: post.slug}) }}">LIKE</a> <i class="fa fa-heart sr-icons"></i> {{post.numLikes}}</li>
+          <li><a href="{{ path('post_like', {slug: post.slug}) }}">LIKE</a> <i class="fa fa-heart sr-icons"></i> {{ post.NumLikes }}</li>
         </ul>
       </div>
       <div class="col-xs-12 col-sm-3">
@@ -52,7 +52,6 @@
     <!-- End of Comments -->  
      </div>
       {% endif %}
-
    </div>
 <!-- End of Principal Content Start -->
 {% endblock %}

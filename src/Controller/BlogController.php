@@ -26,8 +26,6 @@ class BlogController extends AbstractController
     #[Route("/blog/new", name: 'new_post')]
     public function newPost(ManagerRegistry $doctrine, Request $request, SluggerInterface $slugger): Response
     {
-        $user = $this->getUser();
-        $userId = $user->getId();
         $post = new Post();
         $form = $this->createForm(PostFormType::class, $post);
         $form->handleRequest($request);
@@ -69,9 +67,22 @@ class BlogController extends AbstractController
     }
     
     #[Route("/single_post/{slug}/like", name: 'post_like')]
-    public function like(ManagerRegistry $doctrine, $slug): Response
+    public function like(ManagerRegistry $doctrine, Request $request, $slug): Response
     {
-        return new Response("like");
+        $repository = $doctrine->getRepository(Post::class);
+        $post = $repository->findOneBy(["Slug" => $slug]);
+        
+        if (!$post) {
+            throw $this->createNotFoundException('Post no encontrado');
+        }
+
+        $post->setNumLikes($post->getNumLikes() + 1);
+
+        $entityManager = $doctrine->getManager();
+        $entityManager->persist($post);
+        $entityManager->flush();
+
+        return $this->redirectToRoute('single_post', ['slug' => $post->getSlug()]);
 
     }
 
@@ -87,8 +98,26 @@ class BlogController extends AbstractController
     }
 
     #[Route("/single_post/{slug}", name: 'single_post')]
-    public function post(ManagerRegistry $doctrine, Request $request, $slug = 'cambiar'): Response
+    public function post(ManagerRegistry $doctrine, Request $request, $slug = 'Segundo-Post'): Response
     {
-        return new Response("Single post");
+        $repository = $doctrine->getRepository(Post::class);
+        $post = $repository->findOneBy(["Slug" => $slug]);
+
+        $comment = new Comment();
+        $form = $this->createForm(CommentFormType::class, $comment);
+        $form->handleRequest($request);
+        $recents = [];
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $comment = $form->getData();
+            $comment->setPost($post);
+            $entityManager = $doctrine->getManager();
+            $entityManager->persist($comment);
+            $entityManager->flush();
+            return $this->redirectToRoute('single_post', ['slug' => $post->getSlug()]);
+        }
+        return $this->render('blog/single_post.html.twig', [
+            'post' => $post, 'recents' => $recents, 'commentForm' => $form->createView()
+        ]);
     }
 }
