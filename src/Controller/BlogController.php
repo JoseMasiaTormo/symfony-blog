@@ -103,10 +103,12 @@ class BlogController extends AbstractController
         $repository = $doctrine->getRepository(Post::class);
         $post = $repository->findOneBy(["Slug" => $slug]);
 
+        $recentsRepository = $doctrine->getRepository(Post::class);
+        $recents = $recentsRepository->findBy([], ['PublishedAt' => 'DESC'], 2);
+
         $comment = new Comment();
         $form = $this->createForm(CommentFormType::class, $comment);
         $form->handleRequest($request);
-        $recents = [];
 
         if ($form->isSubmitted() && $form->isValid()) {
             $comment = $form->getData();
