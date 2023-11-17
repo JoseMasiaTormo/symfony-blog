@@ -17,9 +17,9 @@
                     <img class="img-responsive" src="{{ asset('images/index/gallery/' ~ post.Image) }}" alt="post's picture">
                   </div>
                   <div class="post-body">
-                    <h3><a href="{{ path('single_post', {'slug': post.Slug}) }}"><strong>Aliquam soluta</strong></a></h3>
+                    <h3><a href="{{ path('single_post', {'slug': post.Slug}) }}"><strong>{{ post.Title }}</strong></a></h3>
                     <hr>
-                    <p>In felis ante, aliquet sit amet venenatis at, feugiat sed leo. Fusce pretium, velit in luctus ornare, elit lorem ultrices tortor, sed consectetur orci risus mollis ante. 
+                    <p>{{ post.Content }} 
                     </p>
                   </div>
                   <div class="post-footer">

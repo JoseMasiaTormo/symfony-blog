@@ -20,7 +20,17 @@ class BlogController extends AbstractController
     #[Route("/blog/buscar/{page}", name: 'blog_buscar')]
     public function buscar(ManagerRegistry $doctrine,  Request $request, int $page = 1): Response
     {
-       return new Response("Buscar");
+        $repository = $doctrine->getRepository(Post::class);
+        $searchTerm = $request->query->get('searchTerm') ?? "";
+        $recents = $repository->findBy([], ['PublishedAt' => 'DESC'], 2);
+        $posts = null;
+        if (!empty($searchTerm)) {
+            $posts = $repository->findByText($searchTerm);
+        }
+
+        return $this->render('blog/blog.html.twig', [
+            'posts' => $posts, 'recents' => $recents, 'searchTerm' => $searchTerm,
+        ]);
     } 
    
     #[Route("/blog/new", name: 'new_post')]
