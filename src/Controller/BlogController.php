@@ -21,6 +21,8 @@ class BlogController extends AbstractController
     public function buscar(ManagerRegistry $doctrine,  Request $request, int $page = 1): Response
     {
         $repository = $doctrine->getRepository(Post::class);
+
+
         $searchTerm = $request->query->get('searchTerm') ?? "";
         $recents = $repository->findBy([], ['PublishedAt' => 'DESC'], 2);
         $posts = null;
@@ -29,7 +31,9 @@ class BlogController extends AbstractController
         }
 
         return $this->render('blog/blog.html.twig', [
-            'posts' => $posts, 'recents' => $recents, 'searchTerm' => $searchTerm,
+            'posts' => $posts, 
+            'recents' => $recents, 
+            'searchTerm' => $searchTerm, 
         ]);
     } 
    
@@ -96,17 +100,18 @@ class BlogController extends AbstractController
 
     }
 
-    #[Route("/blog", name: 'blog')]
-    public function index(ManagerRegistry $doctrine): Response
+    #[Route("/blog/{page}", name: 'blog')]
+    public function index(ManagerRegistry $doctrine, int $page = 1): Response
     {
         $repository = $doctrine->getRepository(Post::class);
-        $posts = $repository->findAll();
+        $posts = $repository->findAllPaginated($page);
 
         $recentsRepository = $doctrine->getRepository(Post::class);
         $recents = $recentsRepository->findBy([], ['PublishedAt' => 'DESC'], 2);
-        
+
         return $this->render('blog/blog.html.twig', [
-            'posts' => $posts, 'recents' => $recents,
+            'posts' => $posts,
+            'recents' => $recents,
         ]);
     }
 
